@@ -22,7 +22,7 @@ void initLocation(const char *fileName) {
 	fseek(file, 0, SEEK_SET);
 
 	byte *data = (byte *)malloc(size * sizeof(byte));
-	size_t r = fread(data, sizeof(byte), (size_t)size, file);
+	fread(data, sizeof(byte), (size_t)size, file);
 
 	byte byteBuffer[4];
 	memcpy(byteBuffer, data, 4);	
@@ -34,8 +34,8 @@ void initLocation(const char *fileName) {
 	ipLocation.count = count;
 
 	for (int i = 0; i < 256; i++) {
-		int off = 4 + i * 4;
-		memcpy(byteBuffer, data + off, 4);
+		int offset = 4 + i * 4;
+		memcpy(byteBuffer, data + offset, 4);
 		ipLocation.index[i] = B2IL(byteBuffer);
 	}
 
@@ -43,13 +43,12 @@ void initLocation(const char *fileName) {
 	ipLocation.textOffset = (uint*)malloc(count * sizeof(uint));
 	ipLocation.textlen = (uint*)malloc(count * sizeof(uint));
 	for (int i = 0; i < count; i++) {
-		int off = 4 + 1024 + i * 9;
-		memcpy(byteBuffer, data + off, 4);
+		int offset = 4 + 1024 + i * 9;
+		memcpy(byteBuffer, data + offset, 4);
 		ipLocation.ipEndArr[i] = B2IL(byteBuffer);
-		memcpy(byteBuffer, data + off + 4, 4);
+		memcpy(byteBuffer, data + offset + 4, 4);
 		ipLocation.textOffset[i] = B2IL(byteBuffer);
-		int tmp = B2IL(byteBuffer);
-		ipLocation.textlen[i] = data[off + 8];
+		ipLocation.textlen[i] = data[offset + 8];
 	}
 	return;
 }
