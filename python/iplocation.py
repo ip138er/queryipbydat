@@ -73,7 +73,11 @@ class Ip138(object):
         '''查询IP信息
         '''
         # 使用网络字节编码IP地址
-        ip = unpack('!I', socket.inet_aton(ip))[0]
+        try:
+        	ip = unpack('!I', socket.inet_aton(ip))[0]
+        except:
+        	print('输入iP格式不对')
+        	exit()
         end = 0
         # 使用 self.find 函数查找ip的索引偏移
         if (ip>>24)!=0xff:
@@ -91,7 +95,7 @@ class Ip138(object):
 
 
 def main():
-	ip = '182.56.66.93'
+	ip = '182.56.66.2'
 	dbpath = '../ip.dat'
 	ipquery = Ip138(dbpath)
 	a = ipquery.query(ip)
