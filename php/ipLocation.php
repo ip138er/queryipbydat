@@ -12,7 +12,6 @@ class Ip138{
 	protected static $_instance = null;
     private static $ip     = NULL;
     private static $db     = NULL;
-    private static $offset = NULL;
     private static $index  = array();
     private static $textData = NULL;
     private static $idx_start = NULL;
@@ -41,12 +40,13 @@ class Ip138{
         {
             return 'N/A';
         }
+        $ip = ip2long($ip);
         if (self::$db === NULL)
         {
             self::init();
         }
         $end = 0;
-        $ip = ip2long($ip);
+        
         //使用 self.find 函数查找ip的索引偏移
         if (($ip>>24)!=0xff){
             $end = self::$index[($ip>>24)+1];
