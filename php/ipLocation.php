@@ -52,7 +52,7 @@ class Ip138{
             $end = self::$index[($ip>>24)+1];
         }
         if ($end == 0){
-            $end = count(self::$ipEndAddr);
+            $end = count(self::$ipEndAddr)-1;
         }
         $i = self::find($ip, self::$index[$ip>>24], $end);
         $off = self::$textOffset[$i];
@@ -70,7 +70,7 @@ class Ip138{
         $m = intval(($left + $right) / 2);
         $new_ip = self::$ipEndAddr[$m];
         if ($ip < $new_ip){
-            return self::find($ip, $left, $m-1);
+            return self::find($ip, $left, $m);
         }else{
             return self::find($ip, $m+1, $right);
         }
