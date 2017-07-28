@@ -122,7 +122,7 @@ class Ip138{
     }
     public function __destruct()
     {
-        if (self::$db !== NULL)
+        if (self::$db !== NULL && is_resource(self::$db))
         {
             fclose(self::$db);
         }
