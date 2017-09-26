@@ -65,7 +65,7 @@ class Ip138(object):
         new_ip = self.ipEndAddr[m]
 
         if ip < new_ip:
-            return self.find(ip, l, m-1)
+            return self.find(ip, l, m)
         else:
             return self.find(ip, m+1, r)
 
@@ -83,7 +83,7 @@ class Ip138(object):
         if (ip>>24)!=0xff:
         	end = self.index[(ip>>24)+1]
         if end == 0:
-        	end = len(self.ipEndAddr)
+        	end = len(self.ipEndAddr)-1
         i = self.find(ip, self.index[ip>>24], end)
         off = self.textOffset[i]
         # IP记录偏移值+4可以丢弃前4字节的IP地址信息。
@@ -95,7 +95,7 @@ class Ip138(object):
 
 
 def main():
-	ip = '182.56.66.2'
+	ip = '61.139.2.69'
 	dbpath = '../ip.dat'
 	ipquery = Ip138(dbpath)
 	a = ipquery.query(ip)
