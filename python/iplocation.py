@@ -33,7 +33,7 @@ class Ip138(object):
         self.db.seek(0)
         self.idx_start = unpack('I', self.db.read(4))[0]
         self.db.seek(self.idx_start)
-        self.total = (self.idx_start-4 -256*4) / 9
+        self.total = int((self.idx_start-4 -256*4) / 9)
         self.textData = self.db[self.idx_start:]
         self.db.seek(0)
         for x in range(256):
@@ -61,7 +61,7 @@ class Ip138(object):
         if r <= l:
             return l
 
-        m = (l + r) / 2
+        m = int((l + r) / 2)
         new_ip = self.ipEndAddr[m]
 
         if ip < new_ip:
@@ -84,7 +84,7 @@ class Ip138(object):
         	end = self.index[(ip>>24)+1]
         if end == 0:
         	end = len(self.ipEndAddr)-1
-        i = self.find(ip, self.index[ip>>24], end)
+        i = int(self.find(ip, self.index[ip>>24], end))
         off = self.textOffset[i]
         # IP记录偏移值+4可以丢弃前4字节的IP地址信息。
         return self.textData[off:off+self.textLen[i]]
@@ -99,7 +99,7 @@ def main():
 	dbpath = '../ip.dat'
 	ipquery = Ip138(dbpath)
 	a = ipquery.query(ip)
-	print '%15s %s' % (ip, a)
+	print('%15s %s' % (ip, a.decode('utf-8')))
 
 if __name__ == '__main__':
 
