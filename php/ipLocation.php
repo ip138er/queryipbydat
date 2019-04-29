@@ -35,7 +35,7 @@ class Ip138{
             return 'N/A';
         }
         $nip   = gethostbyname($ip);
-        $ipdot = explode('.', $nip);
+        $ipdot = explode('.', trim($nip));
         if ($ipdot[0] < 0 || $ipdot[0] > 255 || count($ipdot) !== 4)
         {
             return 'N/A';
@@ -45,38 +45,35 @@ class Ip138{
         {
             self::init();
         }
+
         $end = 0;
-        
-        //使用 self.find 函数查找ip的索引偏移
+        //self::$index 0开始索引，往前对一位偏差
         if (($ip>>24)!=0xff){
             $end = self::$index[($ip>>24)+1];
         }
+
         if ($end == 0){
-            $end = count(self::$ipEndAddr)-1;
+            $end = count(self::$ipEndAddr);
         }
+
         $i = self::find($ip, self::$index[$ip>>24], $end);
-        $off = self::$textOffset[$i];
-        $addr = substr(self::$textData,$off,self::$textLen[$i]);
+        $addr = substr(self::$textData, self::$textOffset[$i], self::$textLen[$i]);
         return  $addr;
-        //IP记录偏移值+4可以丢弃前4字节的IP地址信息。
-        //return self::$textData[off:off+self.textLen[i]]
     }
 
-    private static function find($ip,$left, $right){
+    private static function find($ip, $left, $right){
         //使用二分法查找网络字节编码的IP地址的索引记录
         if ($right <= $left){
-            return $left;
+            return $right;
         }
         $m = intval(($left + $right) / 2);
         $new_ip = self::$ipEndAddr[$m];
-        if ($ip < $new_ip){
+        if ($ip <= $new_ip){
             return self::find($ip, $left, $m);
         }else{
             return self::find($ip, $m+1, $right);
         }
     }
-
-
 
     private static function init()
     {
@@ -91,25 +88,28 @@ class Ip138{
         }
     }
 
-
-
     private static function read_data(){
+        //文本数据偏移值
         fseek(self::$db,0);
         self::$idx_start = unpack('I', fread(self::$db, 4))[1];
+        //ip段的数量 = (文本数据偏移值 - 文本数据offset值，int4字节 - 分割索引量256*int4) / 每条记录占用字节9
+        self::$total = (self::$idx_start - 4 - 256*4) / 9;
+        //读取文本数据
         fseek(self::$db,self::$idx_start);
-        self::$total = (self::$idx_start-4 -256*4) / 9;
         while (!feof(self::$db)){
             self::$textData.= fread(self::$db,4096);
         }
+        //分割索引值，abc.def.igh.lkm，为加快索引增加abc分割
         fseek(self::$db,0);
         for($i=0;$i<256;$i++){
             $off = 4+4*$i;          
-           fseek(self::$db,$off);
-           self::$index[$i] =  unpack('I', fread(self::$db, 4))[1];
+            fseek(self::$db, $off);
+            self::$index[$i] =  unpack('I', fread(self::$db, 4))[1];
         }
 
+        //读取各ip段数据（结束值、所在文本偏移值、所在文本长度）
         for($i=0;$i<self::$total;$i++){
-           $off = 4 + 1024 + $i*9;
+           $off = 4 + 256*4 + $i*9;
            fseek(self::$db,$off);
            self::$ipEndAddr[$i] =  unpack('I', fread(self::$db, 4))[1];
            fseek(self::$db,$off+4);
@@ -131,10 +131,10 @@ class Ip138{
 
 
 function main(){
-	$ip = '202.194.48.39';
+	$ip = '14.197.253.214';
 	$ip138 = Ip138::getInstance();
 	$a = $ip138->query($ip);
-	$output = sprintf('%15s %s',$ip, $a);
+	$output = sprintf("%15s %s\n",$ip, $a);
     echo $output;
 }
 main();
