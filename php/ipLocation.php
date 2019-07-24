@@ -1,9 +1,10 @@
 <?php
 /**
   *  ip138php ip查询
+  *  注意：php版本只能使用64位
   *
   **/
-
+ini_set("memory_limit","-1");
 /**
 * 
 */
