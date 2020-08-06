@@ -2,6 +2,7 @@
 /**
   *  ip138php ip查询
   *  注意：php版本只能使用64位
+  *  能处理离线库加载进内存使用此代码
   *
   **/
 ini_set("memory_limit","-1");
@@ -132,11 +133,12 @@ class Ip138{
 
 
 function main(){
-	$ip = '14.197.253.214';
+	$ip = '255.255.255.255';
 	$ip138 = Ip138::getInstance();
 	$a = $ip138->query($ip);
-	$output = sprintf("%15s %s\n",$ip, $a);
+	$output = sprintf("%s %s\n",$ip, $a);
     echo $output;
 }
 main();
+
 ?>
