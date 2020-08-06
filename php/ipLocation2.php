@@ -4,18 +4,11 @@
   *
   **/
 class Ip138{
-	
-	protected static $_instance = null;
+    protected static $_instance = null;
     private static $ip     = NULL;
     private static $db     = NULL;
-    private static $index  = array();
-    private static $textData = NULL;
-    private static $idx_start = NULL;
+    private static $textOffset = 0;
     private static $total = 0;
-    private static $ipEndAddr = array();
-    private static $textOffset = array();
-    private static $textLen = array();
-
 
     public static function getInstance() {
         if (!self::$_instance instanceof self){
@@ -62,11 +55,6 @@ class Ip138{
         
         //ip段的数量
         self::$total = (self::$textOffset - 4 - 256*4) / 9;
-        //读取文本数据
-        fseek(self::$db,self::$textOffset);
-        while (!feof(self::$db)){
-            self::$textData.= fread(self::$db,4096);
-        }
 
         //分割索引值，abc.def.igh.lkm，为加快索引增加abc分割
         $first = $iplong>>24;
