@@ -4,7 +4,10 @@
 
 typedef unsigned char byte;
 typedef unsigned int uint;
+
+#if !defined(B2IL)
 #define B2IL(b) (((b)[0] & 0xFF) | (((b)[1] << 8) & 0xFF00) | (((b)[2] << 16) & 0xFF0000) | (((b)[3] << 24) & 0xFF000000))
+#endif
 
 struct {
 	uint index[256]; 
