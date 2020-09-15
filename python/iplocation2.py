@@ -30,6 +30,7 @@ class Ip138(object):
         self.db.seek(0)
         self.textOffset = unpack('I', self.db.read(4))[0]
         self.total = int((self.textOffset - 4 - 256*4) / 9)
+        #print(self.textOffset)
         #print(self.total)
 
     def query(self, ip):
@@ -51,7 +52,10 @@ class Ip138(object):
             left = unpack('I', self.db.read(4))[0]
             self.db.seek(4+(first+1)*4)
             right = unpack('I', self.db.read(4))[0]-1
+            if right<1:
+                right = self.total
 
+        #print(first, left, right)
         i = 0
         while i<24:
             middle = int(math.floor((left+right)/2))
@@ -61,6 +65,7 @@ class Ip138(object):
                 textOffset = unpack('I', self.db.read(4))[0]
                 self.db.seek(ipOffset+8)
                 textLength = unpack('B', self.db.read(1))[0]
+                #print(right, textOffset, textLength)
 
                 self.db.seek(self.textOffset + textOffset)
                 text = self.db.read(textLength)

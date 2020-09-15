@@ -144,6 +144,9 @@ func (this *IpLocation2) Find(ip net.IP) string {
 		buffer = make([]byte, 4)
 		this.File.Read(buffer)
 		right = binary.LittleEndian.Uint32(buffer)-1
+		if(right<1){
+			right = this.Total
+		}
 	}
 
 	var i int = 0

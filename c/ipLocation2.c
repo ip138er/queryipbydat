@@ -59,6 +59,9 @@ void findLocation2(char* ipstr, char * result) {
 	}else{
 		left = readIntData(4+first*4);
 		right = readIntData(4+(first+1)*4)-1;
+		if(right < 1){
+			right = ipLocation2.total;
+		}
 	}
 	//printf("%u %u %u\n", first, left, right);
 

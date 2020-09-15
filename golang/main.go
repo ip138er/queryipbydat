@@ -31,5 +31,9 @@ func findIpLocation2(){
 	location2 := new(IpLocation2)
 	location2.InitFromFile("../ip.dat")
 
+	fmt.Println(location2.Query("0.0.0.0", DataTypeJsonp, "find"));
 	fmt.Println(location2.Query("255.255.255.255", DataTypeJsonp, "find"));
+	fmt.Println(location2.Query("152.32.193.0", DataTypeJsonp, "find"));
+	fmt.Println(location2.Query("1.0.2.1", DataTypeJsonp, "find"));
+	fmt.Println(location2.Query("110.81.112.0", DataTypeJsonp, "find"));
 }

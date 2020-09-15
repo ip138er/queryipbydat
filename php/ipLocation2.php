@@ -72,6 +72,9 @@ class Ip138{
             $left = unpack('I', fread(self::$db, 4))[1];
             fseek(self::$db, 4+($first+1)*4);
             $right = unpack('I', fread(self::$db, 4))[1]-1;
+            if($right<1){
+                $right = self::$total;
+            }
         }
 
         //读取各ip段数据（结束值、所在文本偏移值、所在文本长度）

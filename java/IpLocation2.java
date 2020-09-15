@@ -42,6 +42,9 @@ public class IpLocation2 {
         }else{
             left = this.readIntLong(4+first*4);
             right = this.readIntLong(4+(first+1)*4)-1;
+            if(right<1){
+                right = this.total;
+            }
         }
 
         int i = 0;
