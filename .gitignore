@@ -1,0 +1,10 @@
+*.dat
+.DS_Store
+
+bin/
+obj/
+
+c/main
+java/*.class
+java/api
+golang/main
