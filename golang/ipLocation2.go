@@ -49,7 +49,7 @@ func (this *IpLocation2) Query(ipstr string, dataType int, callback string) stri
 	var fields [7]string
 	locationStr := this.Find(ip)
 	tmp := strings.Split(locationStr, "\t")
-	for i := 0; i < len(tmp); i++ {
+	for i := 0; i < len(fields); i++ {
 		fields[i] = tmp[i]
 	}
 

@@ -91,7 +91,7 @@ func (this *IpLocation) Find(ipstr string, dataType int, callback string) string
 	var fields [7]string
 	locationStr := this.FindByUint(binary.BigEndian.Uint32([]byte(ip.To4())))
 	tmp := strings.Split(locationStr, "\t")
-	for i := 0; i < len(tmp); i++ {
+	for i := 0; i < len(fields); i++ {
 		fields[i] = tmp[i]
 	}
 
