@@ -7,10 +7,6 @@ import (
 	"math"
 	"bytes"
 	"encoding/binary"
-	"encoding/json"
-	"encoding/xml"
-	"fmt"
-	"strings"
 )
 
 //ip数据
@@ -46,80 +42,9 @@ func (this *IpLocation2) Query(ipstr string, dataType int, callback string) stri
 		return "error"
 	}
 
-	var fields [7]string
 	locationStr := this.Find(ip)
-	tmp := strings.Split(locationStr, "\t")
-	for i := 0; i < len(fields); i++ {
-		fields[i] = tmp[i]
-	}
 
-	switch dataType {
-	case 1:
-		return ip.String() + "\t" + fields[0] + " " + fields[1] + " " + fields[2] + " " + fields[3] + " " + fields[4] + " " + fields[5] + " " + fields[6]
-	case 2:
-		type locationInfo struct {
-			Ret  string    `json:"ret"`
-			Ip   string    `json:"ip"`
-			Data [7]string `json:"data"`
-		}
-		var location locationInfo
-		location.Ret = "ok"
-		location.Data[0] = fields[0]
-		location.Data[1] = fields[1]
-		location.Data[2] = fields[2]
-		location.Data[3] = fields[3]
-		location.Data[4] = fields[4]
-		location.Data[5] = fields[5]
-		location.Data[6] = fields[6]
-		location.Ip = ip.String()
-		result, err := json.Marshal(location)
-		if err != nil {
-			fmt.Println("error:", err)
-			return "error"
-		}
-		if callback != "" {
-			return callback + "(" + string(result) + ")"
-		} else {
-			return string(result)
-		}
-	case 3:
-		type locationData struct {
-			Country string `xml:"country"`
-			Region  string `xml:"region"`
-			City    string `xml:"city"`
-			District string `xml:"district"`
-			Isp     string `xml:"isp"`
-			Zip     string `xml:"zip"`
-			Zone    string `xml:"zone"`
-		}
-		type locationInfo struct {
-			Ret  string       `xml:"ret"`
-			Ip   string       `xml:"ip"`
-			Data locationData `xml:"data"`
-		}
-		var location locationInfo
-		location.Ret = "ok"
-		location.Ip = ip.String()
-		location.Data = locationData{
-			Country: fields[0],
-			Region:  fields[1],
-			City:    fields[2],
-			District:    fields[3],
-			Isp:     fields[4],
-			Zip:     fields[5],
-			Zone:    fields[6],
-		}
-
-		result, err := xml.MarshalIndent(location, " ", " ")
-		if err != nil {
-			fmt.Println("error:", err)
-			return "error"
-		} else {
-			return string(result)
-		}
-	}
-
-	return "error"
+	return locationStr
 }
 
 func (this *IpLocation2) Find(ip net.IP) string {
